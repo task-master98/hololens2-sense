@@ -19,7 +19,7 @@ public class TestSlider : MonoBehaviour
     {
         if ((pinchSlider == null) || (pv_image == null))
         {
-            Debug.LogError("Objects not intialized");
+            // Debug.LogError("Objects not intialized");
             return;
         }
 
@@ -27,7 +27,7 @@ public class TestSlider : MonoBehaviour
         intialXscale = pv_image.transform.localScale.x;
         InitialYscale = pv_image.transform.localScale.y;
 
-        DisplayValues(intialXscale, InitialYscale);
+        // DisplayValues(intialXscale, InitialYscale);
         SetupLimits();
         // Subscribe to slider events
         pinchSlider.OnValueUpdated.AddListener(OnSliderValueUpdated);        
@@ -45,7 +45,7 @@ public class TestSlider : MonoBehaviour
     // Event handler for when the slider value is updated
     private void OnSliderValueUpdated(SliderEventData eventData)
     {
-        Debug.Log("Slider Value Updated: " + eventData.NewValue);
+        // Debug.Log("Slider Value Updated: " + eventData.NewValue);
         AdjustQuadSize(eventData.NewValue);
     }
 
@@ -57,7 +57,7 @@ public class TestSlider : MonoBehaviour
            Vector3 currentScale = pv_image.transform.localScale;
            float newSizeX = Mathf.Lerp(lowerXlimit, upperXlimit, value);
            float newSizeY = Mathf.Lerp(lowerYlimit, upperYlimit, value);      
-           DisplayValues(newSizeX, newSizeY);     
+        //    DisplayValues(newSizeX, newSizeY);     
            Vector3 newScale = new Vector3(newSizeX, currentScale.y, newSizeY);
            pv_image.transform.localScale = newScale;
         }
@@ -84,8 +84,8 @@ public class TestSlider : MonoBehaviour
         lowerYlimit = (float)(1.0 - scaleFactorZ) * InitialYscale;
         upperYlimit = (float)(1.0 + scaleFactorZ) * InitialYscale;
 
-        DisplayValues(lowerXlimit, lowerYlimit);
-        DisplayValues(upperXlimit, upperYlimit);
-        Debug.Log("Limits set!");
+        // DisplayValues(lowerXlimit, lowerYlimit);
+        // DisplayValues(upperXlimit, upperYlimit);
+        // Debug.Log("Limits set!");
     }
 }
