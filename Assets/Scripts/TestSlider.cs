@@ -12,9 +12,11 @@ public class TestSlider : MonoBehaviour
     private float lowerYlimit;
     private float upperYlimit;
     [SerializeField]
-    public float scaleFactorX = 0.2f;
+    public float scaleFactorX;
     [SerializeField]
-    public float scaleFactorZ = 0.4f;
+    public float scaleFactorZ;
+    [SerializeField]
+    public float defaultValue;
     void Awake()
     {
         if ((pinchSlider == null) || (pv_image == null))
@@ -23,11 +25,11 @@ public class TestSlider : MonoBehaviour
             return;
         }
 
-        SetSliderValue(0.5f);
+        SetSliderValue(defaultValue);
         intialXscale = pv_image.transform.localScale.x;
-        InitialYscale = pv_image.transform.localScale.y;
+        InitialYscale = pv_image.transform.localScale.z;
 
-        // DisplayValues(intialXscale, InitialYscale);
+        DisplayValues(intialXscale, InitialYscale);
         SetupLimits();
         // Subscribe to slider events
         pinchSlider.OnValueUpdated.AddListener(OnSliderValueUpdated);        
