@@ -1779,7 +1779,7 @@ MonoBehaviour:
   OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1697855567}
+      - m_Target: {fileID: 1937567527}
         m_TargetAssemblyTypeName: ButtonActions, Assembly-CSharp
         m_MethodName: DestroyQuad
         m_Mode: 1
@@ -3326,7 +3326,7 @@ MonoBehaviour:
   OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1187066849}
+      - m_Target: {fileID: 926249614}
         m_TargetAssemblyTypeName: ButtonActions, Assembly-CSharp
         m_MethodName: StartFlashing
         m_Mode: 1
@@ -6722,7 +6722,7 @@ MonoBehaviour:
   OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1697855567}
+      - m_Target: {fileID: 1937567527}
         m_TargetAssemblyTypeName: ButtonActions, Assembly-CSharp
         m_MethodName: StopFlashing
         m_Mode: 1
@@ -7777,7 +7777,7 @@ MonoBehaviour:
   OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1187066849}
+      - m_Target: {fileID: 926249614}
         m_TargetAssemblyTypeName: ButtonActions, Assembly-CSharp
         m_MethodName: DestroyQuad
         m_Mode: 1
@@ -9391,6 +9391,7 @@ GameObject:
   - component: {fileID: 926249613}
   - component: {fileID: 926249612}
   - component: {fileID: 926249611}
+  - component: {fileID: 926249614}
   m_Layer: 0
   m_Name: RM_VLC_LEFTFRONT
   m_TagString: Untagged
@@ -9475,6 +9476,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 926249609}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &926249614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 926249609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01a29781009cf18498100b8edb407916, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraPV: {fileID: 926249612}
 --- !u!1 &927592083
 GameObject:
   m_ObjectHideFlags: 0
@@ -10408,7 +10422,7 @@ MonoBehaviour:
   OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1697855567}
+      - m_Target: {fileID: 1937567527}
         m_TargetAssemblyTypeName: ButtonActions, Assembly-CSharp
         m_MethodName: StartFlashing
         m_Mode: 1
@@ -13487,7 +13501,7 @@ MonoBehaviour:
   OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1187066849}
+      - m_Target: {fileID: 926249614}
         m_TargetAssemblyTypeName: ButtonActions, Assembly-CSharp
         m_MethodName: StopFlashing
         m_Mode: 1
@@ -17320,7 +17334,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1697855562}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01a29781009cf18498100b8edb407916, type: 3}
   m_Name: 
@@ -19555,6 +19569,7 @@ GameObject:
   - component: {fileID: 1937567526}
   - component: {fileID: 1937567525}
   - component: {fileID: 1937567524}
+  - component: {fileID: 1937567527}
   m_Layer: 0
   m_Name: RM_VLC_RIGHTFRONT
   m_TagString: Untagged
@@ -19587,7 +19602,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &1937567525
@@ -19639,6 +19654,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1937567522}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1937567527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937567522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01a29781009cf18498100b8edb407916, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraPV: {fileID: 1937567525}
 --- !u!1 &1938122637
 GameObject:
   m_ObjectHideFlags: 0
