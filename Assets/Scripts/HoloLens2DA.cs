@@ -494,9 +494,9 @@ public class HoloLens2DA : MonoBehaviour
         // Load frame data into textures
         hl2da_imt fc = hl2da_imt.Convert(fb.Buffer(0), hl2da_imt.GetStride_PV(pvcf.width), pvcf.height, hl2da_api.IMT_Format.Nv12, hl2da_api.IMT_Format.Bgra8); // PV images are NV12
         tex_pv[0].LoadRawTextureData(fc.Buffer, fc.Length);  
-        tex_pv[1].LoadRawTextureData(fc.Buffer, fc.Length);      
+        // tex_pv[1].LoadRawTextureData(fc.Buffer, fc.Length);      
         tex_pv[0].Apply();
-        tex_pv[1].Apply();
+        // tex_pv[1].Apply();
 
         // for (int index = 0; index < 2; index++)
         // {
