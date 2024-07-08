@@ -8,7 +8,7 @@ public class ButtonActions : MonoBehaviour
 
 
     public Renderer cameraPV;
-    private bool isQuadActive = false;
+    private bool isQuadActive = true;
     private float flashInterval = 10.0f;
     private float visibleDuration = 5.0f;
     private Coroutine flashCoroutine;
