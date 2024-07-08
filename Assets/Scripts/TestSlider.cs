@@ -12,9 +12,13 @@ public class TestSlider : MonoBehaviour
     private float lowerYlimit;
     private float upperYlimit;
     [SerializeField]
-    public float scaleFactorX = 0.2f;
+    public float minscaleFactorX = 0.2f;
     [SerializeField]
-    public float scaleFactorZ = 0.4f;
+    public float maxscaleFactorX = 1.4f;
+    [SerializeField]
+    public float minscaleFactorZ = 0.2f;
+    [SerializeField]
+    public float maxscaleFactorZ = 1.4f;
     void Awake()
     {
         if ((pinchSlider == null) || (pv_image == null))
@@ -79,10 +83,10 @@ public class TestSlider : MonoBehaviour
 
     private void SetupLimits()
     {
-        lowerXlimit = (float)(1.0 - scaleFactorX) * intialXscale;
-        upperXlimit = (float)(1.0 + scaleFactorX) * intialXscale;
-        lowerYlimit = (float)(1.0 - scaleFactorZ) * InitialYscale;
-        upperYlimit = (float)(1.0 + scaleFactorZ) * InitialYscale;
+        lowerXlimit = (float)(1.0 - minscaleFactorX) * intialXscale;
+        upperXlimit = (float)(1.0 + maxscaleFactorX) * intialXscale;
+        lowerYlimit = (float)(1.0 - minscaleFactorZ) * InitialYscale;
+        upperYlimit = (float)(1.0 + maxscaleFactorZ) * InitialYscale;
 
         // DisplayValues(lowerXlimit, lowerYlimit);
         // DisplayValues(upperXlimit, upperYlimit);
