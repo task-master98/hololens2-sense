@@ -29,7 +29,7 @@ public class TestSlider : MonoBehaviour
 
         SetSliderValue(0.5f);
         intialXscale = pv_image.transform.localScale.x;
-        InitialYscale = pv_image.transform.localScale.y;
+        InitialYscale = pv_image.transform.localScale.z;
 
         // DisplayValues(intialXscale, InitialYscale);
         SetupLimits();
