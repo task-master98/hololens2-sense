@@ -84,6 +84,7 @@ public class HoloLens2DA : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("Initialization has started!");
         // Set invalid depth pixels to zero
         invalidate_depth = true;
 
@@ -263,6 +264,7 @@ public class HoloLens2DA : MonoBehaviour
 
         tmp_ea = ea_text.GetComponent<TextMeshPro>();
         tmp_ev_format = ev_text.GetComponent<TextMeshPro>();
+        Debug.Log("Initialization is now complete");
     }
 
     // Update is called once per frame
@@ -396,6 +398,7 @@ public class HoloLens2DA : MonoBehaviour
 
     void Update_RM_VLC(hl2da_framebuffer fb)
     {
+        Debug.Log("Updating VLC data");
         int index = (int)fb.Id;
 
         // Load frame data into textures
@@ -492,6 +495,7 @@ public class HoloLens2DA : MonoBehaviour
         */
 
         // Load frame data into textures
+        Debug.Log("Updating PV data");
         hl2da_imt fc = hl2da_imt.Convert(fb.Buffer(0), hl2da_imt.GetStride_PV(pvcf.width), pvcf.height, hl2da_api.IMT_Format.Nv12, hl2da_api.IMT_Format.Bgra8); // PV images are NV12
         tex_pv[0].LoadRawTextureData(fc.Buffer, fc.Length);  
         tex_pv[1].LoadRawTextureData(fc.Buffer, fc.Length);      
