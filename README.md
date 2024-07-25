@@ -52,7 +52,7 @@ The project captures data from multiple sensors on the HoloLens 2, such as the R
     - This should open up a small window which gives the IP address. All IP addresses are a set of 4 numbers separated by dots (.) All the numbers are
     between 0 to 255. For example, `173.XXX.XXX.X`. Please make a note of this IP address.
     - On your desktop or laptop which is also connected to the same network as your Hololens device, open a browser such as `Google Chrome` and enter the IP address. This should direct you to the following screen.
-    - [Image](https://github.com/task-master98/hololens2-sense/blob/version-frame_rate_fix/Images/DevicePortalWarning.png)
+    - [alt text](https://github.com/task-master98/hololens2-sense/blob/version-frame_rate_fix/Images/DevicePortalWarning.png)
 
 7. **App Package Installation**
     - The app package will be prepared by the developer and shipped off. Given below is an organization of the app package folder
