@@ -24488,7 +24488,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7890467505168750963, guid: d32bad7a10948e34894c3b0ed3fd9cd2, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7890467505168750964, guid: d32bad7a10948e34894c3b0ed3fd9cd2, type: 3}
       propertyPath: _showOnStartup
@@ -25484,6 +25484,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60f5b910edc67be4d8dec0b936b9c203, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  distanceSlider: {fileID: 255581059}
+  targetObject: {fileID: 5598976762026759436}
 --- !u!1 &2020809669
 GameObject:
   m_ObjectHideFlags: 0
