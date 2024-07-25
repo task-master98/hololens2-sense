@@ -3,8 +3,12 @@ import asyncio
 import websockets
 
 async def send_command(command):
-    async with websockets.connect("ws://192.168.137.1:8080") as websocket:
-        await websocket.send(command)
+    try:
+        async with websockets.connect("ws://172.20.10.8:8080") as websocket:
+            await websocket.send(command)
+            print(f"Sent command : {command}")
+    except Exception as e:
+        print(f"Error sending command: {e}")
 
 def send_command_async(command):
     loop = asyncio.new_event_loop()
