@@ -45,3 +45,15 @@ The project captures data from multiple sensors on the HoloLens 2, such as the R
     - Go to Edit > Project Settings > Player.
     - Under Other Settings, set the Scripting Backend to IL2CPP and Target Architectures to ARM64.
     - Under Publishing Settings, select the create app package button and follow the instructions.
+
+6. **Navigate to the Device Portal**
+    - Switch on the Hololens and unlock it with your PIN. Make sure it is connected to the Wifi. [Note: this should usually be a home-Wifi or your phone hotspot as they do not block such IP addresses].
+    - Once the device is connected, the next step is to obtain a connection to the device portal. For this we need the IP address of the Hololens. Simply speak into the device `What's my IP?`.
+    - This should open up a small window which gives the IP address. All IP addresses are a set of 4 numbers separated by dots (.) All the numbers are
+    between 0 to 255. For example, `173.XXX.XXX.X`. Please make a note of this IP address.
+    - On your desktop or laptop which is also connected to the same network as your Hololens device, open a browser such as `Google Chrome` and enter the IP address. This should direct you to the following screen.
+
+7. **App Package Installation**
+    - The app package will be prepared by the developer and shipped off. Given below is an organization of the app package folder
+    - Click on the given folder named `hl2da_unity_v2_<VERSION>` and navigate to the `.appx` file
+
