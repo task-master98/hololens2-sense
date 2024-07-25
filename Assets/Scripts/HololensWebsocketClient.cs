@@ -2,6 +2,7 @@ using UnityEngine;
 using WebSocketSharp;
 using Microsoft.MixedReality.Toolkit.UI;
 using Microsoft.MixedReality.Toolkit.Utilities.Solvers;
+using System;
 
 public class HololensWebsocketClient : MonoBehaviour
 {
@@ -13,14 +14,22 @@ public class HololensWebsocketClient : MonoBehaviour
     void Start()
     {
         Debug.Log("Starting WebSocket connection...");
-        ws = new WebSocket("ws://172.20.10.8:8080");
+        ws = new WebSocket("ws://172.20.10.6:8080");
         ws.OnOpen += (sender, e) => Debug.Log("WebSocket connection opened.");
         ws.OnError += (sender, e) => Debug.LogError("WebSocket error: " + e.Message);
         ws.OnClose += (sender, e) => Debug.Log("WebSocket connection closed: " + e.Reason);
         ws.OnMessage += (sender, e) =>
         {
             Debug.Log("Message received from server: " + e.Data);
-            ProcessCommand(e.Data);
+            try
+            {
+                ProcessCommand(e.Data);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Exception during ProcessCommand: {ex}");
+            }
+            
         };
         ws.Connect();
         orbital = targetObject.GetComponent<Orbital>();
