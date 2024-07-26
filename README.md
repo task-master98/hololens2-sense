@@ -47,14 +47,28 @@ The project captures data from multiple sensors on the HoloLens 2, such as the R
     - Under Publishing Settings, select the create app package button and follow the instructions.
 
 6. **Navigate to the Device Portal**
-    - Switch on the Hololens and unlock it with your PIN. Make sure it is connected to the Wifi. [Note: this should usually be a home-Wifi or your phone hotspot as they do not block such IP addresses].
-    - Once the device is connected, the next step is to obtain a connection to the device portal. For this we need the IP address of the Hololens. Simply speak into the device `What's my IP?`.
+    - Switch on the HoloLens and unlock it with your PIN. Make sure it is connected to the Wifi. [Note: this should usually be a home-Wifi or your phone hotspot as they do not block such IP addresses].
+    - Once the device is connected, the next step is to obtain a connection to the device portal. For this we need the IP address of the HoloLens. Simply speak into the device `What's my IP?`.
     - This should open up a small window which gives the IP address. All IP addresses are a set of 4 numbers separated by dots (.) All the numbers are
     between 0 to 255. For example, `173.XXX.XXX.X`. Please make a note of this IP address.
-    - On your desktop or laptop which is also connected to the same network as your Hololens device, open a browser such as `Google Chrome` and enter the IP address. This should direct you to the following screen.
+    - On your desktop or laptop which is also connected to the same network as your HoloLens device, open a browser such as `Google Chrome` and enter the IP address. This should direct you to the following screen.
     - ![Image](https://github.com/task-master98/hololens2-sense/blob/version-frame_rate_fix/Images/DevicePortalWarning.png)
+    - Simply click on `Advanced` and this will bring you the following webpage ![Image](https://github.com/task-master98/hololens2-sense/blob/version-frame_rate_fix/Images/AdvancedSettingsWarning.png)
+    - This will prompt you to enter the user credentials. Please enter them as you have set them up and it would navigate to the `Windows Device Portal Home` ![Image](https://github.com/task-master98/hololens2-sense/blob/version-frame_rate_fix/Images/DevicePortalHome.png)
+    - Finally click on `Views` > `Apps` which opens up the applications window ![Image](https://github.com/task-master98/hololens2-sense/blob/version-frame_rate_fix/Images/DevicePortal.png). Click on `Choose File` in the applications window.
 
 7. **App Package Installation**
-    - The app package will be prepared by the developer and shipped off. Given below is an organization of the app package folder
-    - Click on the given folder named `hl2da_unity_v2_<VERSION>` and navigate to the `.appx` file
+    - The app package will be prepared by the developer and shipped off. Given below is an organization of the app package folder. ![Image](https://github.com/task-master98/hololens2-sense/blob/version-frame_rate_fix/Images/AppPackageFolder.JPG)
+    - Click on the given folder named `hl2da_unity_v2_<VERSION>` and navigate to the `.appx` file as highlighted in the image above.
+    - If this application is being installed for the first time, we also need to install the dependencies. Simply click on `Install additional dependencies` once the `.appx` file has been selected. This will again prompt you to open the app package folder. Navigate to the dependencies folder which is highlighted in this image ![Image](https://github.com/task-master98/hololens2-sense/blob/version-frame_rate_fix/Images/Dependencies-1.JPG)
+    - Next navigate to the required architecture which for the HoloLens device is ARM64 ![Image](https://github.com/task-master98/hololens2-sense/blob/version-frame_rate_fix/Images/Dependencies-2.JPG)
+    - Select the dependency file and click `open`, ![Image](https://github.com/task-master98/hololens2-sense/blob/version-frame_rate_fix/Images/Dependencies-3.JPG)
+    - Finally click `install` and wait until the progress bar is completely filled and says `Done`. Now the application has been successfully installed on the HoloLens.
+
+8. **Open the Application**
+    - Navigate to the application in the HoloLens and click it. It should be named `hl2da_unity_v2`.
+    - Once it's open, the user should see this on startup, ![Image](https://github.com/task-master98/hololens2-sense/blob/version-frame_rate_fix/Images/AppStartup.jpg)
+    - The user can move around and use the application as intended. Using the UI components like the button and the slider should manipulate the different configurations of the app such as the distance and size of each window.
+    - ![Image](https://github.com/task-master98/hololens2-sense/blob/version-frame_rate_fix/Images/LeftViewMin.jpg)
+    - ![Image](https://github.com/task-master98/hololens2-sense/blob/version-frame_rate_fix/Images/LeftViewMax.jpg)
 
