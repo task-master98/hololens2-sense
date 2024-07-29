@@ -4,7 +4,7 @@ import websockets
 
 async def send_command(command):
     try:
-        async with websockets.connect("ws://172.20.10.6:8080") as websocket:
+        async with websockets.connect("ws://172.20.10.8:8080") as websocket:
             await websocket.send(command)
             print(f"Sent command : {command}")
     except Exception as e:
@@ -22,3 +22,9 @@ if st.button("Increase Distance"):
 
 if st.button("Decrease Distance"):
     send_command_async("decrease_distance")
+
+if st.button("Toggle Left"):
+    send_command_async("toggle_left")
+
+if st.button("Toggle Right"):
+    send_command_async("toggle_right")
