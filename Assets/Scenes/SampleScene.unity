@@ -25484,8 +25484,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60f5b910edc67be4d8dec0b936b9c203, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceSlider: {fileID: 255581059}
   targetObject: {fileID: 5598976762026759436}
+  pv_image_left: {fileID: 1187066844}
+  pv_image_right: {fileID: 1697855562}
 --- !u!1 &2020809669
 GameObject:
   m_ObjectHideFlags: 0
