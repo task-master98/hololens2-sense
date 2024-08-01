@@ -12,8 +12,23 @@ public class HololensWebsocketClient : MonoBehaviour
     public GameObject targetObject;
     private Orbital orbital;
     public GameObject pv_image_left;
-    public GameObject pv_image_right;    
+    public GameObject pv_image_right;
+    private Renderer pvLeftQuad;
+    private Renderer pvRightQuad;    
     private ConcurrentQueue<Action> actionQueue = new ConcurrentQueue<Action>();
+
+    [SerializeField]
+    public float minscaleFactorX = 0.2f;
+    [SerializeField]
+    public float maxscaleFactorX = 1.4f;
+    [SerializeField]
+    public float minscaleFactorZ = 0.2f;
+    [SerializeField]
+    public float maxscaleFactorZ = 1.4f;
+    private float lowerXlimit;
+    private float upperXlimit;
+    private float lowerZlimit;
+    private float upperZlimit;
 
     void Start()
     {
@@ -40,6 +55,12 @@ public class HololensWebsocketClient : MonoBehaviour
 
         Debug.Log("PV LEFT status: " + pv_image_left.activeSelf);
         Debug.Log("PV RIGHT status " + pv_image_right.activeSelf);
+
+        pvLeftQuad = pv_image_left.GetComponent<Renderer>();
+        pvRightQuad = pv_image_right.GetComponent<Renderer>();
+
+        SetupLimits(pvLeftQuad);
+        SetupLimits(pvRightQuad);
 
         if (orbital == null)
         {
@@ -94,6 +115,20 @@ public class HololensWebsocketClient : MonoBehaviour
             Debug.Log("toggle right command received");
             actionQueue.Enqueue(() => ToggleRenderer(pv_image_right));
         }
+
+        else if (command.StartsWith("slider_value:"))
+        {
+            string valueStr = command.Substring("slider_value:".Length);
+            if (float.TryParse(valueStr, out float value))
+            {
+                Debug.Log("Slider value received: " + value);
+                actionQueue.Enqueue(() => ResizeQuad(pvLeftQuad, value));
+            }
+            else
+            {
+                Debug.LogError("Failed to parse slider value");
+            }
+        }
     }
 
     private void AdjustDistance(float amount)
@@ -126,6 +161,27 @@ public class HololensWebsocketClient : MonoBehaviour
             quad.SetActive(true);
             Debug.Log("Setting Quad to true");
         }
+    }
+
+    private void ResizeQuad(Renderer quadMesh, float value)
+    {
+        Vector3 currentScale = quadMesh.transform.localScale;
+        float newSizeX = Mathf.Lerp(lowerXlimit, upperXlimit, value);
+        float newSizeZ = Mathf.Lerp(lowerZlimit, upperZlimit, value); 
+        Vector3 newScale = new Vector3(newSizeX, currentScale.y, newSizeZ);
+        quadMesh.transform.localScale = newScale;
+
+    }
+    private void SetupLimits(Renderer quadMesh)
+    {
+        float intialXscale = quadMesh.transform.localScale.x;
+        float initialZscale = quadMesh.transform.localScale.z;
+
+        lowerXlimit = (float)(1.0 - minscaleFactorX) * intialXscale;
+        upperXlimit = (float)(1.0 + maxscaleFactorX) * intialXscale;
+        lowerZlimit = (float)(1.0 - minscaleFactorZ) * initialZscale;
+        upperZlimit = (float)(1.0 + maxscaleFactorZ) * initialZscale;
+        
     }
     // private void OnSliderUpdated(SliderEventData eventData)
     // {
