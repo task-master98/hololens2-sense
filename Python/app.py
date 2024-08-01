@@ -28,3 +28,10 @@ if st.button("Toggle Left"):
 
 if st.button("Toggle Right"):
     send_command_async("toggle_right")
+
+st.subheader("Increase Quad Size")
+
+left_slider = st.slider("Select aspect ratio of Quad", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
+st.write(f"Quad Aspect Ratio: {left_slider}")
+
+send_command_async(f"slider_value:{left_slider}")
