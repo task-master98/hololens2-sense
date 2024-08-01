@@ -33,7 +33,7 @@ public class HololensWebsocketClient : MonoBehaviour
     void Start()
     {
         Debug.Log("Starting WebSocket connection...");
-        ws = new WebSocket("ws://172.20.10.8:8080");
+        ws = new WebSocket("ws://172.20.10.6:8080");
         ws.OnOpen += (sender, e) => Debug.Log("WebSocket connection opened.");
         ws.OnError += (sender, e) => Debug.LogError("WebSocket error: " + e.Message);
         ws.OnClose += (sender, e) => Debug.Log("WebSocket connection closed: " + e.Reason);
@@ -129,6 +129,12 @@ public class HololensWebsocketClient : MonoBehaviour
                 Debug.LogError("Failed to parse slider value");
             }
         }
+
+        else if (command.StartsWith("move_"))
+        {
+            Debug.Log(command + "command recieved");
+            actionQueue.Enqueue(() => UpdateCoordinates(pvLeftQuad, command));           
+        }
     }
 
     private void AdjustDistance(float amount)
@@ -163,6 +169,27 @@ public class HololensWebsocketClient : MonoBehaviour
         }
     }
 
+    private void UpdateCoordinates(Renderer quadMesh, string command)
+    {
+        Vector3 positionCoords = quadMesh.transform.position;
+
+        switch(command)
+        {
+            case "move_right":
+                positionCoords.x += 0.1f;
+                break;
+            case "move_down":
+                positionCoords.y -= 0.1f;
+                break;
+            case "move_up":
+                positionCoords.y += 0.1f;
+                break;
+            case "move_left":
+                positionCoords.x -= 0.1f;
+                break;
+        }
+        quadMesh.transform.position = positionCoords;
+    }
     private void ResizeQuad(Renderer quadMesh, float value)
     {
         Vector3 currentScale = quadMesh.transform.localScale;
