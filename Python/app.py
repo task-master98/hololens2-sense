@@ -58,6 +58,19 @@ with st.container():
         st.write("")  # Add some space below the buttons
         if st.button("⬇️ Down"):
             send_command_async("move_down")
+        
+        st.subheader("Move Quad to Position")
+        if st.button("Bottom Left"):
+            send_command_async("bottom_left")
+
+        if st.button("Bottom Right"):
+            send_command_async("bottom_right")
+
+        if st.button("Top Left"):
+            send_command_async("top_left")
+
+        if st.button("Top Right"):
+            send_command_async("top_right")
 
 if st.session_state.get('previous_slider_value') != left_slider:
     st.session_state['previous_slider_value'] = left_slider

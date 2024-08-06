@@ -29,11 +29,15 @@ public class HololensWebsocketClient : MonoBehaviour
     private float upperXlimit;
     private float lowerZlimit;
     private float upperZlimit;
+    private Vector3 bottomLeft;
+    private Vector3 bottomRight;
+    private Vector3 topLeft;
+    private Vector3 topRight;
 
     void Start()
     {
         Debug.Log("Starting WebSocket connection...");
-        ws = new WebSocket("ws://172.20.10.6:8080");
+        ws = new WebSocket("ws://172.20.10.8:8080");
         ws.OnOpen += (sender, e) => Debug.Log("WebSocket connection opened.");
         ws.OnError += (sender, e) => Debug.LogError("WebSocket error: " + e.Message);
         ws.OnClose += (sender, e) => Debug.Log("WebSocket connection closed: " + e.Reason);
@@ -51,7 +55,12 @@ public class HololensWebsocketClient : MonoBehaviour
             
         };
         ws.Connect();
-        orbital = targetObject.GetComponent<Orbital>();       
+        InitializeQuadPosition();
+        orbital = targetObject.GetComponent<Orbital>();  
+        if (orbital == null)
+        {
+            Debug.LogError("Orbital component not found on targetObject.");
+        }     
 
         Debug.Log("PV LEFT status: " + pv_image_left.activeSelf);
         Debug.Log("PV RIGHT status " + pv_image_right.activeSelf);
@@ -61,14 +70,8 @@ public class HololensWebsocketClient : MonoBehaviour
 
         SetupLimits(pvLeftQuad);
         SetupLimits(pvRightQuad);
-
-        if (orbital == null)
-        {
-            Debug.LogError("Orbital component not found on targetObject.");
-        }       
-
-        // Add listener to the PinchSlider
-        // distanceSlider.OnValueUpdated.AddListener(OnSliderUpdated);
+        SetQuadPosition("bottom_left");
+        
     }
 
     void OnDestroy()
@@ -135,6 +138,12 @@ public class HololensWebsocketClient : MonoBehaviour
             Debug.Log(command + "command recieved");
             actionQueue.Enqueue(() => UpdateCoordinates(pvLeftQuad, command));           
         }
+
+        else if (command.StartsWith("bottom_") || command.StartsWith("top_"))
+        {
+            Debug.Log(command + "command received");
+            actionQueue.Enqueue(() => SetQuadPosition(command));
+        }
     }
 
     private void AdjustDistance(float amount)
@@ -187,6 +196,9 @@ public class HololensWebsocketClient : MonoBehaviour
             case "move_left":
                 positionCoords.x -= 0.1f;
                 break;
+            default:
+                Debug.Log("Invalid command received" + command);
+                break;
         }
         quadMesh.transform.position = positionCoords;
     }
@@ -210,14 +222,38 @@ public class HololensWebsocketClient : MonoBehaviour
         upperZlimit = (float)(1.0 + maxscaleFactorZ) * initialZscale;
         
     }
-    // private void OnSliderUpdated(SliderEventData eventData)
-    // {
-    //     float distance = Mathf.Lerp(1.0f, 2.0f, eventData.NewValue); // Map slider value to desired range
-    //     if (orbital != null)
-    //     {
-    //         Vector3 localOffset = orbital.LocalOffset;
-    //         localOffset.z = distance;
-    //         orbital.LocalOffset = localOffset;
-    //     }
-    // }
+    private void InitializeQuadPosition()
+    {
+        // bottomLeft = Camera.main.ViewportToWorldPoint(new Vector3(-0.39f,-0.42f,-0.02f));
+        // bottomRight = Camera.main.ViewportToWorldPoint(new Vector3(0.27f,-0.42f,-0.02f));
+        // topLeft = Camera.main.ViewportToWorldPoint(new Vector3(-0.39f,0.14f,-0.02f));
+        // topRight = Camera.main.ViewportToWorldPoint(new Vector3(0.27f,0.14f,-0.02f));
+        
+        bottomLeft = new Vector3(-0.39f,-0.42f,-0.02f);
+        bottomRight = new Vector3(0.27f,-0.42f,-0.02f);
+        topLeft = new Vector3(-0.39f,0.14f,-0.02f);
+        topRight = new Vector3(0.27f,0.14f,-0.02f);
+    }
+    private void SetQuadPosition(string position)
+    {
+        switch (position)
+        {
+            case "bottom_left":
+                pv_image_left.transform.localPosition = bottomLeft;
+                break;
+            case "bottom_right":
+                pv_image_left.transform.localPosition = bottomRight;
+                break;
+            case "top_left":
+                pv_image_left.transform.localPosition = topLeft;
+                break;
+            case "top_right":
+                pv_image_left.transform.localPosition = topRight;
+                break;
+            default:
+                Debug.Log("Invalid command received: " + position);
+                break;
+        }
+    }
+    
 }
