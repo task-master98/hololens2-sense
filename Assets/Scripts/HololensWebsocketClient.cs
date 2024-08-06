@@ -1,3 +1,11 @@
+/*
+TODO:
+- Remove blurriness from the video feed when the resolution has been changed
+- Find a way to diplay Mixed Reality Capture data on the web app itself. If not possible
+upload a schematic of the current status of the app.
+- Find a way to take into account the tilt of the Hololens for patients wearing spectacles. The tilt 
+changes the apparent position of the Holograms.
+*/
 using UnityEngine;
 using WebSocketSharp;
 using Microsoft.MixedReality.Toolkit.UI;
