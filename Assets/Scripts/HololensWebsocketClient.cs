@@ -5,6 +5,7 @@ TODO:
 upload a schematic of the current status of the app.
 - Find a way to take into account the tilt of the Hololens for patients wearing spectacles. The tilt 
 changes the apparent position of the Holograms.
+- Implement port forwarding such that the web app is accessible from other devices as well
 */
 using UnityEngine;
 using WebSocketSharp;
