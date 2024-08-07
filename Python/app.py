@@ -34,6 +34,16 @@ with st.container():
 
         left_slider = st.slider("Select aspect ratio of Quad", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
         st.write(f"Quad Aspect Ratio: {left_slider}")        
+
+        st.subheader("Change Filter Mode")
+        if st.button("Filter Point"):
+            send_command_async("point_filter")
+        
+        if st.button("Filter Bilinear"):
+            send_command_async("bilinear_filter")
+        
+        if st.button("Filter Trilinear"):
+            send_command_async("trilinear_filter")
     
 
     with col2:
