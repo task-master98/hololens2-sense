@@ -28,10 +28,7 @@ with st.container():
             send_command_async("decrease_distance")
 
         if st.button("Toggle Left"):
-            send_command_async("toggle_left")
-
-        if st.button("Toggle Right"):
-            send_command_async("toggle_right")
+            send_command_async("toggle_left")       
 
         st.subheader("Increase Quad Size")
 
