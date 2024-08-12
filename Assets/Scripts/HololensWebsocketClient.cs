@@ -1,4 +1,4 @@
-/*
+ /*
 TODO:
 - Remove blurriness from the video feed when the resolution has been changed
 - Find a way to diplay Mixed Reality Capture data on the web app itself. If not possible
@@ -6,6 +6,7 @@ upload a schematic of the current status of the app.
 - Find a way to take into account the tilt of the Hololens for patients wearing spectacles. The tilt 
 changes the apparent position of the Holograms.
 - Implement port forwarding such that the web app is accessible from other devices as well
+- Implement grayscale shader on the PV image as an additional mode.
 */
 using UnityEngine;
 using WebSocketSharp;
@@ -23,7 +24,9 @@ public class HololensWebsocketClient : MonoBehaviour
     public GameObject pv_image_left;
     public GameObject pv_image_right;
     private Renderer pvLeftQuad;
-    private Renderer pvRightQuad;    
+    private Renderer pvRightQuad;  
+    public Shader grayscale_shader;
+    public Material colormap_material;  
     private ConcurrentQueue<Action> actionQueue = new ConcurrentQueue<Action>();
 
     [SerializeField]
@@ -42,8 +45,30 @@ public class HololensWebsocketClient : MonoBehaviour
     private Vector3 bottomRight;
     private Vector3 topLeft;
     private Vector3 topRight;
+    private Material grayscale_mat;
+    private RenderTexture pv_tex_r;
+    private Texture pv_tex_current;
+    private bool isGrayscale = false;
 
     void Start()
+    {
+        
+        InitializeConnection();
+        InitializeQuadPosition();
+        InitializeOrbital();  
+        InitializeQuads();       
+
+        grayscale_mat = new Material(grayscale_shader);
+        pv_tex_r = new RenderTexture(640, 360, 0, RenderTextureFormat.BGRA32);
+        pv_tex_current = pvLeftQuad.material.mainTexture;
+
+        SetupLimits(pvLeftQuad);
+        SetupLimits(pvRightQuad);
+        SetQuadPosition("bottom_left");
+        
+    }
+
+    private void InitializeConnection()
     {
         Debug.Log("Starting WebSocket connection...");
         ws = new WebSocket("ws://172.20.10.8:8080");
@@ -64,23 +89,23 @@ public class HololensWebsocketClient : MonoBehaviour
             
         };
         ws.Connect();
-        InitializeQuadPosition();
+    }
+
+    private void InitializeOrbital()
+    {
         orbital = targetObject.GetComponent<Orbital>();  
         if (orbital == null)
         {
             Debug.LogError("Orbital component not found on targetObject.");
-        }     
+        }   
+    }
 
+    private void InitializeQuads()
+    {
         Debug.Log("PV LEFT status: " + pv_image_left.activeSelf);
         Debug.Log("PV RIGHT status " + pv_image_right.activeSelf);
-
         pvLeftQuad = pv_image_left.GetComponent<Renderer>();
         pvRightQuad = pv_image_right.GetComponent<Renderer>();
-
-        SetupLimits(pvLeftQuad);
-        SetupLimits(pvRightQuad);
-        SetQuadPosition("bottom_left");
-        
     }
 
     void OnDestroy()
@@ -97,6 +122,12 @@ public class HololensWebsocketClient : MonoBehaviour
         while (actionQueue.TryDequeue(out var action))
         {
             action();
+        }
+
+        if (isGrayscale)
+        {
+            Graphics.Blit(pv_tex_current, pv_tex_r, grayscale_mat);
+            pvLeftQuad.material.mainTexture = pv_tex_r;
         }
     }
 
@@ -152,6 +183,18 @@ public class HololensWebsocketClient : MonoBehaviour
         {
             Debug.Log(command + "command received");
             actionQueue.Enqueue(() => SetQuadPosition(command));
+        }
+
+        else if (command.StartsWith("filter_"))
+        {
+            Debug.Log(command + "command received");
+            actionQueue.Enqueue(() => UpdateFilterMode(command));
+        }
+
+        else if (command == "toggle_grayscale")
+        {
+            Debug.Log(command + "command received");
+            actionQueue.Enqueue(() => ToggleGrayscaleMap());
         }
     }
 
@@ -213,8 +256,9 @@ public class HololensWebsocketClient : MonoBehaviour
     }
     private void ResizeQuad(Renderer quadMesh, float value)
     {
+        float aspectRatio = 16f/9f;        
         Vector3 currentScale = quadMesh.transform.localScale;
-        float newSizeX = Mathf.Lerp(lowerXlimit, upperXlimit, value);
+        float newSizeX = Mathf.Lerp(lowerXlimit, upperXlimit, value) * aspectRatio;
         float newSizeZ = Mathf.Lerp(lowerZlimit, upperZlimit, value); 
         Vector3 newScale = new Vector3(newSizeX, currentScale.y, newSizeZ);
         quadMesh.transform.localScale = newScale;
@@ -232,12 +276,7 @@ public class HololensWebsocketClient : MonoBehaviour
         
     }
     private void InitializeQuadPosition()
-    {
-        // bottomLeft = Camera.main.ViewportToWorldPoint(new Vector3(-0.39f,-0.42f,-0.02f));
-        // bottomRight = Camera.main.ViewportToWorldPoint(new Vector3(0.27f,-0.42f,-0.02f));
-        // topLeft = Camera.main.ViewportToWorldPoint(new Vector3(-0.39f,0.14f,-0.02f));
-        // topRight = Camera.main.ViewportToWorldPoint(new Vector3(0.27f,0.14f,-0.02f));
-        
+    {               
         bottomLeft = new Vector3(-0.39f,-0.42f,-0.02f);
         bottomRight = new Vector3(0.27f,-0.42f,-0.02f);
         topLeft = new Vector3(-0.39f,0.14f,-0.02f);
@@ -263,6 +302,38 @@ public class HololensWebsocketClient : MonoBehaviour
                 Debug.Log("Invalid command received: " + position);
                 break;
         }
+    }
+
+    private void UpdateFilterMode(string command)
+    {
+        FilterMode currentFiltermode = pvLeftQuad.material.mainTexture.filterMode;
+        Debug.Log("Current filter mode: " + currentFiltermode);
+
+        switch (command)
+        {
+            case "point_filter":
+                pvLeftQuad.material.mainTexture.filterMode = FilterMode.Point;
+                break;
+            case "bilinear_filter":
+                pvLeftQuad.material.mainTexture.filterMode = FilterMode.Bilinear;
+                break;
+            case "trilinear_filter":
+                pvLeftQuad.material.mainTexture.filterMode = FilterMode.Trilinear;
+                break;
+            default:
+                Debug.Log("Invalid command received");
+                break;
+        }
+    }
+
+    private void ToggleGrayscaleMap()
+    {
+        isGrayscale = !isGrayscale;
+
+        if (!isGrayscale)
+        {
+            pvLeftQuad.material.mainTexture = pv_tex_current;            
+        }        
     }
     
 }
