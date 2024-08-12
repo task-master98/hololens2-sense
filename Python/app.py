@@ -37,13 +37,16 @@ with st.container():
 
         st.subheader("Change Filter Mode")
         if st.button("Filter Point"):
-            send_command_async("point_filter")
+            send_command_async("filter_point")
         
         if st.button("Filter Bilinear"):
-            send_command_async("bilinear_filter")
+            send_command_async("filter_bilinear")
         
         if st.button("Filter Trilinear"):
-            send_command_async("trilinear_filter")
+            send_command_async("filter_trilinear")
+        
+        if st.button("Toggle Grayscale"):
+            send_command_async("toggle_grayscale")
     
 
     with col2:
