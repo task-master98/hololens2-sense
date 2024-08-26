@@ -78,7 +78,10 @@ public class HololensWebsocketClient : MonoBehaviour
     private void InitializeConnection()
     {
         Debug.Log("Starting WebSocket connection...");
-        ws = new WebSocket("ws://172.20.10.8:8080");
+        ws = new WebSocket("wss://hololens-sense-9bd80b459134.herokuapp.com/");
+        ws.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;        
+        ws.SslConfiguration.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
+
         ws.OnOpen += (sender, e) => Debug.Log("WebSocket connection opened.");
         ws.OnError += (sender, e) => Debug.LogError("WebSocket error: " + e.Message);
         ws.OnClose += (sender, e) => Debug.Log("WebSocket connection closed: " + e.Reason);
