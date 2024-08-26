@@ -26250,6 +26250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetObject: {fileID: 5598976762026759436}
+  depthtargetObject: {fileID: 1126347017}
   pv_image_left: {fileID: 1187066844}
   pv_image_right: {fileID: 1697855562}
   grayscale_shader: {fileID: 4800000, guid: cbd4fe558a47f1f4a8a4ce6a2dcb771a, type: 3}

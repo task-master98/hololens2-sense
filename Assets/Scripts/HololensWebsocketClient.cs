@@ -20,11 +20,13 @@ public class HololensWebsocketClient : MonoBehaviour
     private WebSocket ws;
     // public PinchSlider distanceSlider;
     public GameObject targetObject;
+    public GameObject depthtargetObject;
     private Orbital orbital;
     public GameObject pv_image_left;
     public GameObject pv_image_right;
     private Renderer pvLeftQuad;
     private Renderer pvRightQuad;  
+    private Renderer depthQuad;
     public Shader grayscale_shader;
     public Material colormap_material;  
     private ConcurrentQueue<Action> actionQueue = new ConcurrentQueue<Action>();
@@ -49,6 +51,10 @@ public class HololensWebsocketClient : MonoBehaviour
     private RenderTexture pv_tex_r;
     private Texture pv_tex_current;
     private bool isGrayscale = false;
+    private bool isNightmode = false;
+    private int isfirstToggle = 0;
+
+    private Renderer activeQuad;    
 
     void Start()
     {
@@ -58,13 +64,14 @@ public class HololensWebsocketClient : MonoBehaviour
         InitializeOrbital();  
         InitializeQuads();       
 
+        activeQuad = isNightmode ? depthQuad : pvLeftQuad;
         grayscale_mat = new Material(grayscale_shader);
         pv_tex_r = new RenderTexture(640, 360, 0, RenderTextureFormat.BGRA32);
         pv_tex_current = pvLeftQuad.material.mainTexture;
 
         SetupLimits(pvLeftQuad);
-        SetupLimits(pvRightQuad);
-        SetQuadPosition("bottom_left");
+        SetupLimits(depthQuad);
+        SetQuadPosition(activeQuad, "bottom_left");
         
     }
 
@@ -104,8 +111,10 @@ public class HololensWebsocketClient : MonoBehaviour
     {
         Debug.Log("PV LEFT status: " + pv_image_left.activeSelf);
         Debug.Log("PV RIGHT status " + pv_image_right.activeSelf);
+        Debug.Log("DEPTH QUAD status" + depthtargetObject.activeSelf);
         pvLeftQuad = pv_image_left.GetComponent<Renderer>();
         pvRightQuad = pv_image_right.GetComponent<Renderer>();
+        depthQuad = depthtargetObject.GetComponent<Renderer>();
     }
 
     void OnDestroy()
@@ -150,14 +159,9 @@ public class HololensWebsocketClient : MonoBehaviour
         else if (command == "toggle_left")
         {
             Debug.Log("toggle left command received");
-            actionQueue.Enqueue(() => ToggleRenderer(pv_image_left));
-        }
-
-        else if (command == "toggle_right")
-        {
-            Debug.Log("toggle right command received");
-            actionQueue.Enqueue(() => ToggleRenderer(pv_image_right));
-        }
+            isNightmode = !isNightmode;
+            actionQueue.Enqueue(() => ToggleRenderer(isNightmode));
+        }        
 
         else if (command.StartsWith("slider_value:"))
         {
@@ -165,7 +169,7 @@ public class HololensWebsocketClient : MonoBehaviour
             if (float.TryParse(valueStr, out float value))
             {
                 Debug.Log("Slider value received: " + value);
-                actionQueue.Enqueue(() => ResizeQuad(pvLeftQuad, value));
+                actionQueue.Enqueue(() => ResizeQuad(activeQuad, value));
             }
             else
             {
@@ -176,13 +180,13 @@ public class HololensWebsocketClient : MonoBehaviour
         else if (command.StartsWith("move_"))
         {
             Debug.Log(command + "command recieved");
-            actionQueue.Enqueue(() => UpdateCoordinates(pvLeftQuad, command));           
+            actionQueue.Enqueue(() => UpdateCoordinates(activeQuad, command));           
         }
 
         else if (command.StartsWith("bottom_") || command.StartsWith("top_"))
         {
             Debug.Log(command + "command received");
-            actionQueue.Enqueue(() => SetQuadPosition(command));
+            actionQueue.Enqueue(() => SetQuadPosition(activeQuad, command));
         }
 
         else if (command.StartsWith("filter_"))
@@ -215,19 +219,28 @@ public class HololensWebsocketClient : MonoBehaviour
         }
     }
 
-    private void ToggleRenderer(GameObject quad)
+    private void ToggleRenderer(bool isNightmode)
     {
-        bool currentStatus = quad.activeSelf;
-        if (currentStatus)
+        activeQuad = isNightmode ? depthQuad : pvLeftQuad;
+        isfirstToggle += 1;        
+        if (isNightmode)
         {            
-            quad.SetActive(false);
+            depthtargetObject.SetActive(true);
+            pv_image_left.SetActive(false);
+            if (isfirstToggle == 1)
+            {
+                ResizeQuad(activeQuad, 0.5f);
+                SetQuadPosition(activeQuad, "bottom_right");
+            }
             Debug.Log("Setting Quad to false");
         }
         else
         {
-            quad.SetActive(true);
+            pv_image_left.SetActive(true);
+            depthtargetObject.SetActive(false);
             Debug.Log("Setting Quad to true");
         }
+        isNightmode = !isNightmode;
     }
 
     private void UpdateCoordinates(Renderer quadMesh, string command)
@@ -282,21 +295,21 @@ public class HololensWebsocketClient : MonoBehaviour
         topLeft = new Vector3(-0.39f,0.14f,-0.02f);
         topRight = new Vector3(0.27f,0.14f,-0.02f);
     }
-    private void SetQuadPosition(string position)
+    private void SetQuadPosition(Renderer quad, string position)
     {
         switch (position)
         {
             case "bottom_left":
-                pv_image_left.transform.localPosition = bottomLeft;
+                quad.transform.localPosition = bottomLeft;
                 break;
             case "bottom_right":
-                pv_image_left.transform.localPosition = bottomRight;
+                quad.transform.localPosition = bottomRight;
                 break;
             case "top_left":
-                pv_image_left.transform.localPosition = topLeft;
+                quad.transform.localPosition = topLeft;
                 break;
             case "top_right":
-                pv_image_left.transform.localPosition = topRight;
+                quad.transform.localPosition = topRight;
                 break;
             default:
                 Debug.Log("Invalid command received: " + position);
@@ -334,6 +347,6 @@ public class HololensWebsocketClient : MonoBehaviour
         {
             pvLeftQuad.material.mainTexture = pv_tex_current;            
         }        
-    }
+    }   
     
 }
