@@ -8,8 +8,9 @@ public class DistanceAdjust : MonoBehaviour
     public GameObject targetObject; // Reference to the GameObject with the RadialView solver
     public float minDistanceRange = 0.5f; // Minimum distance slider can set
     public float maxDistanceRange = 3.0f; // Maximum distance slider can set
+    public float initialDistance = 1.5f;
 
-    private RadialView radialView;
+    private Orbital orbital;    
 
     void Start()
     {
@@ -20,19 +21,20 @@ public class DistanceAdjust : MonoBehaviour
         }
 
         // Get the RadialView component from the target object
-        radialView = targetObject.GetComponent<RadialView>();
+        orbital = targetObject.GetComponent<Orbital>();
 
-        if (radialView == null)
+        if (orbital == null)
         {
-            Debug.LogError("RadialView component not found on targetObject.");
+            Debug.LogError("Orbital component not found on targetObject.");
             return;
         }
 
         // Set the slider's initial value to match the current MinDistance
-        distanceSlider.SliderValue = (radialView.MinDistance - minDistanceRange) / (maxDistanceRange - minDistanceRange);
-
+        distanceSlider.SliderValue = (initialDistance - minDistanceRange) / (maxDistanceRange - minDistanceRange);;   
+        
         // Add a listener to the slider's OnValueUpdated event
         distanceSlider.OnValueUpdated.AddListener(OnSliderUpdated);
+        SetSliderValue(0.5f);
     }
 
     private void OnSliderUpdated(SliderEventData eventData)
@@ -41,9 +43,28 @@ public class DistanceAdjust : MonoBehaviour
         float distance = Mathf.Lerp(minDistanceRange, maxDistanceRange, eventData.NewValue);
 
         // Set both MinDistance and MaxDistance to the same value to keep a fixed distance
-        radialView.MinDistance = distance;
-        radialView.MaxDistance = distance;
+        Vector3 localOffset = orbital.LocalOffset;
+        localOffset.z = distance;
+        orbital.LocalOffset = localOffset;
     }
+
+    // private void LateUpdate()
+    // {
+    //     MaintainHeadLevel();
+    // }
+
+    // private void MaintainHeadLevel()
+    // {
+    //     Vector3 headPosition = Camera.main.transform.position;
+    //     Vector3 headForward = Camera.main.transform.forward;
+
+    //     Vector3 desiredPosition = headPosition + headForward * radialView.MinDistance;
+    //     Vector3 smoothedPosition = Vector3.SmoothDamp(targetObject.transform.position, desiredPosition, ref velocity, smoothTime);
+    //     targetObject.transform.position = smoothedPosition;
+
+    //     Quaternion targetRotation = Quaternion.LookRotation(targetObject.transform.position - headPosition);
+    //     targetObject.transform.rotation = Quaternion.Slerp(targetObject.transform.rotation, targetRotation, Time.deltaTime / smoothTime);
+    // }
 
     void OnDestroy()
     {
@@ -51,6 +72,13 @@ public class DistanceAdjust : MonoBehaviour
         if (distanceSlider != null)
         {
             distanceSlider.OnValueUpdated.RemoveListener(OnSliderUpdated);
+        }
+    }
+    public void SetSliderValue(float value)
+    {
+        if (distanceSlider != null)
+        {
+            distanceSlider.SliderValue = value;
         }
     }
 }
